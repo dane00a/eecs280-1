@@ -1,3 +1,4 @@
+
 // Project UID af1f95f547e44c8ea88730dfb185559d
 
 #include <cassert>
@@ -89,7 +90,31 @@ static int squared_difference(Pixel p1, Pixel p2) {
 //           image is computed and written into it.
 //           See the project spec for details on computing the energy matrix.
 void compute_energy_matrix(const Image* img, Matrix* energy) {
-  assert(false); // TODO Replace with your implementation!
+  int maxEnergy = 0;
+  int energyVal;
+  if(energy->width == img -> width && energy->height == img->height){
+    for(int i = img->width; i < img->width*img->height - img->width; ++i){
+      if((i % img->width != 0 && (i-1)%img->width !=0)){
+        energyVal = squared_difference(Image_get_pixel(i-img->width-1),Image_get_pixel(i+img->width+1)) + 
+        squared_difference(Image_get_pixel(i+1),Image_get_pixel(i-1));
+        energy->data[i] = energyVal;
+        if(energyVal > maxEnergy){
+          maxEnergy = energyVal;
+        }
+      }
+    }
+    for(int j = 0; j < img->width*img->height; ++j){
+      energy->data[j] = maxEnergy;
+      if((j+1) == img->width){
+        for(int row = 2; row < img->height; ++row){ // math needs to be checked
+          energy->data[row*j] = maxEnergy;
+          energy->data[row*j-1] = maxEnergy;
+        }
+        j = img->width * img->height - img->width -1;
+      }                    
+    }
+  }
+  //assert(false); // TODO Replace with your implementation!
 }
 
 
@@ -103,7 +128,19 @@ void compute_energy_matrix(const Image* img, Matrix* energy) {
 //           computed and written into it.
 //           See the project spec for details on computing the cost matrix.
 void compute_vertical_cost_matrix(const Matrix* energy, Matrix *cost) {
-  assert(false); // TODO Replace with your implementation!
+  //assert(false); // TODO Replace with your implementation!
+
+	// initializes cost to be the same size as the energy matrix
+	cost->width = energy->width;
+	cost->height = energy->height; 
+
+	// fill in first row with energy values
+	int row_length = energy->height / (sizeof(energy->data) / sizeof(int));
+	for (int i = 0; i < row_length; i++) {
+		cost->data[i] = energy->data[i];
+	}
+
+	//
 }
 
 

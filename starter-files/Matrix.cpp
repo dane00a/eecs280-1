@@ -63,67 +63,14 @@ int Matrix_height(const Matrix* mat) {
 // EFFECTS:  Returns the row of the element pointed to by ptr.
 int Matrix_row(const Matrix* mat, const int* ptr) {
   const int *matBegin = mat->data;
-  cout << matBegin << endl; // it's a pointer
-  cout << ptr << endl; // also a pointer
+  
   int result = ptr - matBegin;
   
-  cout << result << endl; // equal to zero
-  cout << mat->width << endl;
+ 
   result = result / mat->height;
-  return result;
-	//cout << "width: " << mat->width << endl;
-	/*const int *width = &(mat->width);
-	cout << "width: " << endl;
-	//int *result = ptr / *(mat->width);
-	int *result = ptr / width;
-  return result; */
-	/*int data = *(mat->data);
-	cout << "1" << endl;
-	int height = mat->height;
-	cout << "2" << endl;
-	int row_length = data / height;
-	cout << "3" << endl;
-	//cout << mat->data[1] << endl;
-	//cout << mat->data[0] << endl;
+  
+  return result - 1;
 
-	//int address_length = mat->data[1] - mat->data[0]; //need to subtract addresses instead of elements
-	//cout << "address: " << address_length << endl;
-	cout << "4" << endl;
-	cout << "ptr: " << ptr << endl;
-	int pointer = *ptr;
-	cout << "pointer: " << pointer << endl;
-	cout << "5" << endl;
-	//int location = pointer / address_length;
-	int location = pointer / sizeof(int);
-	cout << "location" << location << endl;
-	cout << "6" << endl;
-	int row = location / row_length;
-	cout << "7" << endl;
-	cout << "size: " << sizeof(int) << endl;
-	cout << "address of: " << &ptr << endl;
-	int pointer = *ptr;
-
-	int location = pointer / sizeof(int);
-	int row = location;
-
-	int element = 0;
-	cout << "mat->data: " << mat->data << endl;
-	for (int const *i = mat->data; i < ptr + 1; i++) {
-		element += 1;
-	}
-	cout << "element: " << element << endl;
-	int height = mat->height;
-	int width = mat->width;
-	cout << "height: " << height << endl;
-	//int data = *(mat->data);
-	//int data = sizeof(mat->data) / sizeof(int);
-	int data = width * height;
-	cout << "data: " << data << endl;
-	int row_length = data / height;
-	cout << "row length: " << row_length << endl;
-	int row = element / row_length;
-	cout << "row: " << row << endl;
-	return row - 1; //this may not be right; we need to test it more*/
 
   //assert(false); // TODO Replace with your implementation!
 }
@@ -134,9 +81,9 @@ int Matrix_row(const Matrix* mat, const int* ptr) {
 int Matrix_column(const Matrix* mat, const int* ptr) {
   //assert(false); // TODO Replace with your implementation!
 	const int *matBegin = mat->data;
-	cout << "mat Begin: " << matBegin << endl;
+	
     int result = ptr - matBegin;
-	cout << "result: " << result << endl;
+	
     result = result / mat->height;
     return result; 
 
@@ -153,7 +100,7 @@ int Matrix_column(const Matrix* mat, const int* ptr) {
 // EFFECTS:  Returns a pointer to the element in the Matrix
 //           at the given row and column.
 int* Matrix_at(Matrix* mat, int row, int column) {
-  int *index = mat->data + mat->width*column+column-1; //-1 or +1?
+  int *index = mat->data + mat->width*column+column; //-1 or +1?
   return index;
               
   //assert(false); // TODO Replace with your implementation!
