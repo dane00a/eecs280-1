@@ -85,17 +85,17 @@ static int squared_difference(Pixel p1, Pixel p2) {
 //           energy points to a Matrix.
 // MODIFIES: *energy
 // EFFECTS:  energy serves as an "output parameter".
-//           The Matrix pointed to by energy is initialized to be the same
 //           size as the given Image, and then the energy matrix for that
+//           The Matrix pointed to by energy is initialized to be the same
 //           image is computed and written into it.
 //           See the project spec for details on computing the energy matrix.
 void compute_energy_matrix(const Image* img, Matrix* energy) {
-  int maxEnergy = 0;
   int energyVal;
   if(energy->width == img -> width && energy->height == img->height){
+  int maxEnergy = 0;
     for(int i = img->width; i < img->width*img->height - img->width; ++i){
       if((i % img->width != 0 && (i-1)%img->width !=0)){
-        energyVal = squared_difference(Image_get_pixel(i-img->width-1),Image_get_pixel(i+img->width+1)) + 
+        energyVal = squared_difference(Image_get_pixel(img,i-img->width-1),Image_get_pixel(i+img->width+1)) + //take this line and typecast a *ptr value for this crap instead of doing tons of nested function calls
         squared_difference(Image_get_pixel(i+1),Image_get_pixel(i-1));
         energy->data[i] = energyVal;
         if(energyVal > maxEnergy){
@@ -140,7 +140,25 @@ void compute_vertical_cost_matrix(const Matrix* energy, Matrix *cost) {
 		cost->data[i] = energy->data[i];
 	}
 
-	//
+	// Loop through each pixel and compute the cost
+	for (int i = 1; i < energy->height; i++) {
+		int data_size = sizeof(*energy->data) / sizeof(int);
+		int row_length = data_size / energy->height;
+		for (int j = 0; j < row_length; j++) {
+			int index = (i * row_length) + j;
+			int min_col;
+			if (j == 0) { // first column
+				min_col = Matrix_column_of_min_value_in_row(cost, i - 1, 0, 1);
+				}
+			else if(j == row_length - 1){ // last column
+				min_col = Matrix_column_of_min_value_in_row(cost, i - 1, row_length - 2, row_length - 1);
+			}
+			else { // every other column
+				min_col = Matrix_column_of_min_value_in_row(cost, i - 1, j - 1, j + 1);
+			}
+			cost->data[index] = energy->data[index] + cost->data[((i - 1) * row_length) + min_col + 1];
+		}
+	}
 }
 
 
@@ -160,7 +178,27 @@ void compute_vertical_cost_matrix(const Matrix* energy, Matrix *cost) {
 //           with the bottom of the image and proceeding to the top,
 //           as described in the project spec.
 void find_minimal_vertical_seam(const Matrix* cost, int seam[]) {
-  assert(false); // TODO Replace with your implementation!
+  //assert(false); // TODO Replace with your implementation!
+	
+	// Bottom row
+	int min_col = Matrix_column_of_min_value_in_row(cost, (cost->height) - 1, 0, (cost->width) - 1);
+	seam[cost->height - 1] = min_col;
+ 	
+	// The rest
+	for (int i = 0; i < cost->height; i++) {
+		int prev_col = seam[i];
+
+		if (prev_col == 0) {
+			min_col = Matrix_column_of_min_value_in_row(cost, (cost->height) - 1, 0, 1);
+		}
+		else if (prev_col == cost->width - 1) {
+			min_col = Matrix_column_of_min_value_in_row(cost, (cost->height) - 1, cost->width - 2, cost->width - 1);
+		}
+		else {
+			min_col = Matrix_column_of_min_value_in_row(cost, (cost->height) - 1, prev_col - 1, prev_col + 1);
+		}
+		seam[cost->height - 2 - i] = min_col;
+	}
 }
 
 
@@ -177,7 +215,8 @@ void find_minimal_vertical_seam(const Matrix* cost, int seam[]) {
 // NOTE:     Use the new operator here to create the smaller Image,
 //           and then use delete when you are done with it.
 void remove_vertical_seam(Image *img, const int seam[]) {
-  assert(false); // TODO Replace with your implementation!
+  //assert(false); // TODO Replace with your implementation!
+
 }
 
 

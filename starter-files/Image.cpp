@@ -75,7 +75,7 @@ void Image_print(const Image* img, std::ostream& os) {
     os << " ";
     os << img->blue_channel.data[i];
     os << " ";
-    cout << "3mod6: " << 3%6 << endl;
+ 
     if((i+1) % img->width == 0){
       os << endl;
     }
@@ -99,44 +99,16 @@ int Image_height(const Image* img) {
 //           0 <= column && column < Image_width(img)
 // EFFECTS:  Returns the pixel in the Image at the given row and column.
 Pixel Image_get_pixel(const Image* img, int row, int column) {
-  //int location = *(img->width) * row + column;
-  //Pixel newPixel;
+	Pixel* p = new Pixel;
+	
+	int index = (row * img->width) + column;
 
-  /*cout << "red: " << *(Matrix_at(&img->red_channel, row, column)) << endl;
-  cout << "green: " << *(Matrix_at(&img->green_channel, row, column)) << endl;
-  newPixel.r = *(Matrix_at(&img->red_channel, row, column));
-  newPixel.g = *(Matrix_at(&img->green_channel, row, column));
-  newPixel.b = *(Matrix_at(&img->blue_channel, row, column));
-  cout << "red: " << newPixel.r << " green: " << newPixel.g << " blue: " << newPixel.b << endl;*/
+	p->r = img->red_channel.data[index];
+	p->g = img->green_channel.data[index];
+	p->b = img->blue_channel.data[index];
+	
+	return *p;
 
-  Pixel index;
-
-  int index_num = 0;
-
-  int red = 0;
-
-  int green = 0;
-
-  int blue = 0;
-
-  index_num = row * (img->width) + column;
-
-  red = img->red_channel.data[index_num];
-
-  green = img->green_channel.data[index_num];
-
-  blue = img->blue_channel.data[index_num];
-
-  index.r = red;
-
-  index.g = green; // not a pointer dude
-
-  index.b = blue;
-
-  return index;
-
-
-  //return newPixel;
 }
 
 // REQUIRES: img points to a valid Image
@@ -147,30 +119,11 @@ Pixel Image_get_pixel(const Image* img, int row, int column) {
 //           to the given color.
 void Image_set_pixel(Image* img, int row, int column, Pixel color) {
   //assert(false); // TODO Replace with your implementation!
-	/*cout << *(Matrix_at(&img->red_channel, row, column)) << endl;
+  
   *(Matrix_at(&img->red_channel, row, column)) = color.r;
-  cout << *(Matrix_at(&img->red_channel, row, column)) << endl;
-  cout << *(Matrix_at(&img->green_channel, row, column)) << endl;
   *(Matrix_at(&img->green_channel, row, column)) = color.g;
-  cout << *(Matrix_at(&img->green_channel, row, column)) << endl;
-  cout << *(Matrix_at(&img->blue_channel, row, column)) << endl;
   *(Matrix_at(&img->blue_channel, row, column)) = color.b;
-  cout << *(Matrix_at(&img->blue_channel, row, column)) << endl;
-  cout << color.r << " " << color.g << " " << color.b << endl;
-  cout << *(Matrix_at(&img->red_channel, row, column)) << endl;
-  cout << *(Matrix_at(&img->green_channel, row, column)) << endl;
-  cout << *(Matrix_at(&img->blue_channel, row, column)) << endl;*/
-
-	int index_num = row * (img->width) + column;
-
-	img->red_channel.data[index_num] = color.r;
-
-	img->green_channel.data[index_num] = color.g;
-
-	img->blue_channel.data[index_num] = color.b;
-	cout << "red: " << img->red_channel.data[index_num] << endl;
-	cout << "green: " << img->green_channel.data[index_num] << endl;
-	cout << "blue: " << img->blue_channel.data[index_num] << endl;
+ 
 }
 
 // REQUIRES: img points to a valid Image
@@ -183,5 +136,5 @@ void Image_fill(Image* img, Pixel color) {
 		  img->green_channel.data[i] = color.g;
 		  img->blue_channel.data[i] = color.b;
   }
-
+  
 }
